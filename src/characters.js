@@ -25,6 +25,7 @@ export const GET_CHARACTERS = gql`
 `;
 
 const sortCharacters = (characters, sortKey, sortOrder) => {
+  if (!sortKey) return characters; // Skip sorting if no sortKey is selected
   return [...characters].sort((a, b) => {
     const valueA = a[sortKey]?.name || a[sortKey] || '';
     const valueB = b[sortKey]?.name || b[sortKey] || '';
@@ -36,7 +37,7 @@ const sortCharacters = (characters, sortKey, sortOrder) => {
 
 export function CharacterList() {
   const [filters, setFilters] = useState({ status: '', species: '' });
-  const [sortKey, setSortKey] = useState('name');
+  const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState('asc');
   const [page, setPage] = useState(1);
 
@@ -83,11 +84,12 @@ export function CharacterList() {
         </select>
 
         <select value={sortKey} onChange={(e) => setSortKey(e.target.value)}>
-          <option value="name">Sort by Name</option>
-          <option value="origin">Sort by Origin</option>
+          <option value="">Sort</option>
+          <option value="name">By Name</option>
+          <option value="origin">By Origin</option>
         </select>
 
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} disabled={!sortKey}>
           <option value="asc">Asc</option>
           <option value="desc">Desc</option>
         </select>
@@ -147,3 +149,5 @@ export function CharacterList() {
     </div>
   );
 }
+
+
